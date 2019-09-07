@@ -25,6 +25,9 @@ public class Image {
         this.date = date;
     }
 
+    public Image() {
+    }
+
     public Integer getId() {
         return id;
     }
