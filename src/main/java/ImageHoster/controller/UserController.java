@@ -17,49 +17,44 @@ public class UserController {
     private UserService userService;
 
     //This controller method is called when the request pattern is of type 'users/registration'
+    //This method declares User type and UserProfile type object
+    //Sets the user profile with UserProfile type object
+    //Adds User type object to a model and returns 'users/registration.html' file
     @RequestMapping("users/registration")
     public String registration(Model model) {
-        //Complete this method
-        //Observe User and UserProfile models implemented
-        //Declare an object of User class and UserProfile class
-        //Set the profile of the user as UserProfile type object
-        //Add user in the model and return 'users/registration.html'
-    	User user = new User();
-    	UserProfile profile= new UserProfile();
+        //Complete the method
+    	User user=new User();
+    	UserProfile profile=new UserProfile();
     	user.setProfile(profile);
     	model.addAttribute("User", user);
-    	return "users/registration.html";
+    	return "users/registration";
+    	
     }
 
     //This controller method is called when the request pattern is of type 'users/registration' and also the incoming request is of POST type
+    //This method calls the business logic and after the user record is persisted in the database, directs to login page
     @RequestMapping(value = "users/registration", method = RequestMethod.POST)
     public String registerUser(User user) {
-        //Complete this method
-        //Call the business logic which currently does not store the details of the user in the database
-        //After registration, again redirect to the registration page
-    	userService.registerUser(user);
-    	return "redirect:/users/login";
+        //Complete the method
+        userService.registerUser(user);
+        return "redirect:/users/login";
+    	
     }
-    
+
     //This controller method is called when the request pattern is of type 'users/login'
     @RequestMapping("users/login")
     public String login() {
-        //Complete this method to return the 'users/login.html'
-    	return "users/login.html";
+        return "users/login";
     }
 
     //This controller method is called when the request pattern is of type 'users/login' and also the incoming request is of POST type
-    @RequestMapping(value = "/users/login", method = RequestMethod.POST)
+    @RequestMapping(value = "users/login", method = RequestMethod.POST)
     public String loginUser(User user) {
-        //Complete this method
-        //The method calls the login() method passing user as an argument
-        //If login() method returns true, successful login, direct to the method mapped with request of type '/images'
-        //If login() method returns false, unsuccessful login, redirect to the same login page
-    	boolean isSuccessfulLogin=userService.login(user);
-    	if(isSuccessfulLogin==true)
-    		return "redirect:/images";
-    	else
-    		return "users/login";
+        User loggedUser= userService.login(user);
+        if (loggedUser!=null) {
+            return "redirect:/images";
+        } else {
+            return "users/login";
+        }
     }
-    
 }
