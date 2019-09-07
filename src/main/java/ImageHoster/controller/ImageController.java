@@ -47,13 +47,7 @@ public class ImageController {
     @RequestMapping("/images/{title}")
     public String showImage(@PathVariable("title") String title, Model model) {
         Date date = new Date();
-        Image image = null;
-        if (title.equals("Dr. Strange")) {
-            image = new Image(1, "Dr. Strange", hardCodedImage.getDrStrange(), "Dr. Strange has a time stone", date);
-        } else if (title.equals("SpiderMan")) {
-            image = new Image(2, "SpiderMan", hardCodedImage.getSpiderMan(), "Spider man dies in Infinity War", date);
-        }
-
+        Image image = imageService.getImageByTitle(title);
         model.addAttribute("image", image);
         return "images/image";
     }

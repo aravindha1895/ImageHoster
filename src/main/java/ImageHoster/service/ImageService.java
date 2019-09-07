@@ -34,7 +34,8 @@ public class ImageService {
 
 	// The method returns the list of two harc-coded images
 	public List<Image> getAllImages() {
-		return new ImageService().images;
+		// return new ImageService().images;
+		return imageRepository.getAllImages();
 	}
 
 	// The method does not store the image in the database
@@ -43,5 +44,10 @@ public class ImageService {
 		// image in the database
 		imageRepository.uploadImage(image);
 	}
+	
+    //The method calls the getImageByTitle() method in the Repository and passes the title of the image to be fetched
+    public Image getImageByTitle(String title) {
+        return imageRepository.getImageByTitle(title);
+    }
 
 }
