@@ -1,0 +1,28 @@
+package ImageHoster.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import ImageHoster.model.Image;
+import ImageHoster.service.ImageService;
+
+@Controller
+public class ImageController {
+
+    @Autowired
+    private ImageService imageService;
+
+    //This method displays all the images in the user home page after successful login
+    @RequestMapping("images")
+    public String getUserImages(Model model) {
+        //Complete the method
+        //Get all the hard-coded images in the application using getAllImages() method in ImageService class and add them to the model with 'images' as the key
+    	List<Image> images =imageService.getAllImages();
+    	model.addAttribute("images", images);
+        return "images";
+    }
+}
