@@ -6,10 +6,10 @@
 </head>
 
 
-<!-- Display all the details of a particular image-->
 <body>
 <!-- Using the logged-in fragment -->
 <header th:replace="layout :: logged-in"></header>
+<!-- Display all the details of a particular image-->
 <h1>Welcome User. This is the image</h1>
 <main id="image">
 
@@ -20,6 +20,9 @@
     <div><i>Posted On: </i> <span th:text="${image.date}"></span></div>
     <div><i>Description: </i> <span th:text="${image.description}"></span></div>
 
+    <div>
+        <a th:href="@{/editImage(imageId=${image.id})}">Edit</a>
+    </div>
 </main>
 </body>
 </html>

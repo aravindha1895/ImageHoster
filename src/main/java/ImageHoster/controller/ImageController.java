@@ -89,4 +89,45 @@ public class ImageController {
     private String convertUploadedFileToBase64(MultipartFile file) throws IOException {
         return Base64.getEncoder().encodeToString(file.getBytes());
     }
+    
+    //This controller method is called when the request pattern is of type 'editImage'
+    //This method fetches the image with the corresponding id from the database and adds it to the model with the key as 'image'
+    //The method then returns 'images/edit.html' file wherein you fill all the updated details of the image
+    @RequestMapping(value = "/editImage")
+    public String editImage(@RequestParam("imageId") Integer imageId, Model model) {
+        Image image = imageService.getImage(imageId);
+        model.addAttribute("image", image);
+        return "images/edit";
+    }
+    
+    //This controller method is called when the request pattern is of type 'images/edit' and also the incoming request is of PUT type
+    //The method receives the imageFile, imageId, updated image, along with the Http Session
+    //The method adds the new imageFile to the updated image if user updates the imageFile and adds the previous imageFile to the new updated image if user does not choose to update the imageFile
+    //Set an id of the new updated image
+    //Set the user using Http Session
+    //Set the date on which the image is posted
+    //Call the updateImage() method in the business logic to update the image
+    //Direct to the same page showing the details of that particular updated image
+    @RequestMapping(value = "/editImage", method = RequestMethod.PUT)
+    public String editImageSubmit(@RequestParam("file") MultipartFile file, @RequestParam("imageId") Integer imageId, Image updatedImage, HttpSession session) throws IOException {
+
+    	 Image image = imageService.getImage(imageId);
+    	 String newImage = convertUploadedFileToBase64(file);
+    	 
+    	 
+         if (newImage.isEmpty())
+             updatedImage.setImageFile(image.getImageFile());
+         else {
+             updatedImage.setImageFile(newImage);
+         }
+         
+         updatedImage.setId(imageId);
+         updatedImage.setDate(new Date());
+         User user = (User) session.getAttribute("loggeduser");
+         updatedImage.setUser(user);
+         
+
+         imageService.updateImage(updatedImage);
+         return "redirect:/images/" + updatedImage.getTitle();
+    }
 }
