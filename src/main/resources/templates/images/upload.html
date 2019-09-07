@@ -5,10 +5,11 @@
 <head th:replace="layout :: site-head">
 </head>
 
-<!-- Using the logged-in fragment -->
-<!--<header th:replace="layout :: logged-in"></header>-->
+
 
 <body>
+<!-- Using the logged-in fragment -->
+<header th:replace="layout :: logged-in"></header>
 <h1>Upload New Image</h1>
 
 <form method="post" th:action="@{/images/upload}" enctype="multipart/form-data">

@@ -6,11 +6,10 @@
 <head th:replace="layout :: site-head">
 </head>
 
-
-
-<body>
 <!-- Adding the fragment logged-out in layout.html-->
 <header th:replace="layout :: logged-out"></header>
+
+<body>
 <h1>Image Hoster</h1>
 <main id="images">
     <post th:each="i : ${images}">
