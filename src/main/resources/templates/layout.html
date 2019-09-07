@@ -21,6 +21,9 @@
         <b>Logged in as:</b>
         <label th:text="${session.loggeduser.profile.fullName}"></label> |
         <a href="images/upload.html" th:href="@{/images/upload}">Upload Image</a>
+        <form method="post" th:action="@{/users/logout}">
+            <input type="submit" value="Logout"/>
+        </form>
     </header>
 </header>
 
