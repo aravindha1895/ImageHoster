@@ -1,13 +1,20 @@
 package ImageHoster.controller;
 
-import ImageHoster.model.User;
-import ImageHoster.model.UserProfile;
-import ImageHoster.service.UserService;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import ImageHoster.model.Image;
+import ImageHoster.model.User;
+import ImageHoster.model.UserProfile;
+import ImageHoster.service.ImageService;
+import ImageHoster.service.UserService;
 
 
 @Controller
@@ -15,51 +22,64 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private ImageService imageService;
 
     //This controller method is called when the request pattern is of type 'users/registration'
+    //This method declares User type and UserProfile type object
+    //Sets the user profile with UserProfile type object
+    //Adds User type object to a model and returns 'users/registration.html' file
     @RequestMapping("users/registration")
     public String registration(Model model) {
-        //Complete this method
-        //Observe User and UserProfile models implemented
-        //Declare an object of User class and UserProfile class
-        //Set the profile of the user as UserProfile type object
-        //Add user in the model and return 'users/registration.html'
-    	User user = new User();
-    	UserProfile profile= new UserProfile();
+        //Complete the method
+    	User user=new User();
+    	UserProfile profile=new UserProfile();
     	user.setProfile(profile);
     	model.addAttribute("User", user);
-    	return "users/registration.html";
+    	return "users/registration";
+    	
     }
 
     //This controller method is called when the request pattern is of type 'users/registration' and also the incoming request is of POST type
+    //This method calls the business logic and after the user record is persisted in the database, directs to login page
     @RequestMapping(value = "users/registration", method = RequestMethod.POST)
     public String registerUser(User user) {
-        //Complete this method
-        //Call the business logic which currently does not store the details of the user in the database
-        //After registration, again redirect to the registration page
-    	userService.registerUser(user);
-    	return "redirect:/users/login";
+        //Complete the method
+        userService.registerUser(user);
+        return "redirect:/users/login";
+    	
     }
-    
+
     //This controller method is called when the request pattern is of type 'users/login'
     @RequestMapping("users/login")
     public String login() {
-        //Complete this method to return the 'users/login.html'
-    	return "users/login.html";
+        return "users/login";
     }
 
     //This controller method is called when the request pattern is of type 'users/login' and also the incoming request is of POST type
-    @RequestMapping(value = "/users/login", method = RequestMethod.POST)
-    public String loginUser(User user) {
-        //Complete this method
-        //The method calls the login() method passing user as an argument
-        //If login() method returns true, successful login, direct to the method mapped with request of type '/images'
-        //If login() method returns false, unsuccessful login, redirect to the same login page
-    	boolean isSuccessfulLogin=userService.login(user);
-    	if(isSuccessfulLogin==true)
-    		return "redirect:/images";
-    	else
-    		return "users/login";
+    @RequestMapping(value = "users/login", method = RequestMethod.POST)
+    public String loginUser(User user,HttpSession session) {
+        User loggedUser= userService.login(user);
+        if (loggedUser!=null) {
+        	session.setAttribute("loggeduser", loggedUser);
+            return "redirect:/images";
+        } else {
+            return "users/login";
+        }
     }
     
+    //This controller method is called when the request pattern is of type 'users/logout' and also the incoming request is of POST type
+    //The method receives the Http Session and the Model type object
+    //session is invalidated
+    //All the images are fetched from the database and added to the model with 'images' as the key
+    //'index.html' file is returned showing the landing page of the application and displaying all the images in the application
+    @RequestMapping(value = "users/logout", method = RequestMethod.POST)
+    public String logout(Model model, HttpSession session) {
+        session.invalidate();
+
+        List<Image> images = imageService.getAllImages();
+        model.addAttribute("images", images);
+        return "index";
+    }
 }
