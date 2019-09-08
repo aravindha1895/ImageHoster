@@ -1,6 +1,8 @@
 package ImageHoster.controller;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpSession;
 
@@ -44,11 +46,22 @@ public class UserController {
     //This controller method is called when the request pattern is of type 'users/registration' and also the incoming request is of POST type
     //This method calls the business logic and after the user record is persisted in the database, directs to login page
     @RequestMapping(value = "users/registration", method = RequestMethod.POST)
-    public String registerUser(User user) {
+    public String registerUser(User user, Model model) {
         //Complete the method
-        userService.registerUser(user);
-        return "redirect:/users/login";
-    	
+        //Complete the method
+     	Pattern pattern = Pattern.compile("^(?=\\D*\\d)(?=.*?[a-zA-Z]).*[\\W_].*$");
+     	Matcher m=pattern.matcher(user.getPassword());
+     	if(m.find()) {
+            userService.registerUser(user);
+            return "redirect:/users/login";
+     	} else {
+     		user=new User();
+        	UserProfile profile=new UserProfile();
+        	user.setProfile(profile);
+        	model.addAttribute("User", user);
+        	model.addAttribute("passwordTypeError", "Password didnot matach criteria");
+        	return "users/registration";
+     	}
     }
 
     //This controller method is called when the request pattern is of type 'users/login'
