@@ -260,22 +260,5 @@ public class ImageController {
 			return false;
 	}
 	
-	@RequestMapping(value="/image/{imageId}/{imageTitle}/comments", method=RequestMethod.POST)
-	public String postComments(@PathVariable("imageId") Integer imageId, @PathVariable("imageTitle") String imageTitle,@RequestPart("comment") String userComment,Model model, HttpSession session) {
-		// Image image = imageService.getImageByTitle(title);
-		Image image = imageService.getImageByID(imageId);
-		User user= (User) session.getAttribute("loggeduser");
-		Comment comment = new Comment();
-		comment.setImage(image);
-		comment.setText(userComment);
-		comment.setUser(user);
-		comment.setDate(LocalDate.now());
-		
-		imageService.postComment(comment);
-		
-		model.addAttribute("image", image);
-		model.addAttribute("tags", image.getTags());
-		model.addAttribute("comments", imageService.getAllComments(imageId));
-		return "images/image";
-	}
+
 }

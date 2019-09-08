@@ -133,22 +133,5 @@ public class ImageRepository {
 		}
 	}
 	
-	public void submitComment(Comment comment) {
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction transaction = em.getTransaction();
-		try {
-			transaction.begin();
-			em.persist(comment);
-			transaction.commit();
-		} catch (Exception e) {
-			transaction.rollback();
-		}
-	}
 
-	public List<Comment> getCommentsList(Integer imageId){
-		EntityManager em = emf.createEntityManager();
-		TypedQuery<Comment> query = em.createQuery("SELECT c from Comment c where c.image=:image", Comment.class);
-		query.setParameter("image", getImageByID(imageId));
-		return query.getResultList();
-	}
 }

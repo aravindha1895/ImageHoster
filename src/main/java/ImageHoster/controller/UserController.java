@@ -59,7 +59,7 @@ public class UserController {
         	UserProfile profile=new UserProfile();
         	user.setProfile(profile);
         	model.addAttribute("User", user);
-        	model.addAttribute("passwordTypeError", "Password didnot matach criteria");
+        	model.addAttribute("passwordTypeError", "Password must contain atleast 1 alphabet, 1 number & 1 special character");
         	return "users/registration";
      	}
     }
