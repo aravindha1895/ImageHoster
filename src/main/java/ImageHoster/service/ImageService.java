@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ImageHoster.model.Comment;
 import ImageHoster.model.Image;
 import ImageHoster.repository.ImageRepository;
 
@@ -72,5 +73,12 @@ public class ImageService {
         //Complete the method
     	imageRepository.deleteImage(imageId);
     }
+    
+    public void postComment(Comment comment) {
+    	imageRepository.submitComment(comment);
+    }
 
+    public List<Comment> getAllComments(Integer imageId){
+    	return imageRepository.getCommentsList(imageId);
+    }
 }

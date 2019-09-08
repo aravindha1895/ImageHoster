@@ -1,10 +1,15 @@
 package ImageHoster.controller;
 
-import ImageHoster.model.Image;
-import ImageHoster.model.Tag;
-import ImageHoster.model.User;
-import ImageHoster.service.ImageService;
-import ImageHoster.service.TagService;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,11 +17,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.*;
+import ImageHoster.model.Comment;
+import ImageHoster.model.Image;
+import ImageHoster.model.Tag;
+import ImageHoster.model.User;
+import ImageHoster.service.ImageService;
+import ImageHoster.service.TagService;
 
 @Controller
 public class ImageController {
@@ -56,6 +65,7 @@ public class ImageController {
 		Image image = imageService.getImageByID(imageId);
 		model.addAttribute("image", image);
 		model.addAttribute("tags", image.getTags());
+		model.addAttribute("comments", image.getComment());
 		return "images/image";
 	}
 
@@ -127,6 +137,7 @@ public class ImageController {
 			model.addAttribute("editError", error);
 			model.addAttribute("image", image);
 			model.addAttribute("tags", image.getTags());
+			model.addAttribute("comments", image.getComment());
 			return "images/image";
 		}
 
@@ -190,6 +201,7 @@ public class ImageController {
 			model.addAttribute("deleteError", error);
 			model.addAttribute("image", image);
 			model.addAttribute("tags", image.getTags());
+			model.addAttribute("comments", image.getComment());
 			return "images/image";
 		}
 	}
@@ -246,5 +258,24 @@ public class ImageController {
 			return true;
 		else // Logged in user is not the owner of the image
 			return false;
+	}
+	
+	@RequestMapping(value="/image/{imageId}/{imageTitle}/comments", method=RequestMethod.POST)
+	public String postComments(@PathVariable("imageId") Integer imageId, @PathVariable("imageTitle") String imageTitle,@RequestPart("comment") String userComment,Model model, HttpSession session) {
+		// Image image = imageService.getImageByTitle(title);
+		Image image = imageService.getImageByID(imageId);
+		User user= (User) session.getAttribute("loggeduser");
+		Comment comment = new Comment();
+		comment.setImage(image);
+		comment.setText(userComment);
+		comment.setUser(user);
+		comment.setDate(LocalDate.now());
+		
+		imageService.postComment(comment);
+		
+		model.addAttribute("image", image);
+		model.addAttribute("tags", image.getTags());
+		model.addAttribute("comments", imageService.getAllComments(imageId));
+		return "images/image";
 	}
 }

@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
+import ImageHoster.model.Comment;
 import ImageHoster.model.Image;
 
 //The annotation is a special type of @Component annotation which describes that the class defines a data repository
@@ -127,8 +128,27 @@ public class ImageRepository {
 			em.remove(image);
 			transaction.commit();
 		} catch (Exception e) {
+			e.printStackTrace();
+			transaction.rollback();
+		}
+	}
+	
+	public void submitComment(Comment comment) {
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction transaction = em.getTransaction();
+		try {
+			transaction.begin();
+			em.persist(comment);
+			transaction.commit();
+		} catch (Exception e) {
 			transaction.rollback();
 		}
 	}
 
+	public List<Comment> getCommentsList(Integer imageId){
+		EntityManager em = emf.createEntityManager();
+		TypedQuery<Comment> query = em.createQuery("SELECT c from Comment c where c.image=:image", Comment.class);
+		query.setParameter("image", getImageByID(imageId));
+		return query.getResultList();
+	}
 }

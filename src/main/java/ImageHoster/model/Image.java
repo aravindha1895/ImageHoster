@@ -1,9 +1,21 @@
 package ImageHoster.model;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 
 //@Entity annotation specifies that the corresponding class is a JPA entity
@@ -50,8 +62,19 @@ public class Image {
     //Since the mapping is Many to Many, a new table will be generated containing the two columns both referencing to the primary key of both the tables ('images', 'tags')
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Tag> tags = new ArrayList<>();
+    
+    @OneToMany(mappedBy="image", cascade= CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Comment> comment = new ArrayList<>();
 
-    public Image() {
+    public List<Comment> getComment() {
+		return comment;
+	}
+
+	public void setComment(List<Comment> comment) {
+		this.comment = comment;
+	}
+
+	public Image() {
     }
 
     public Image(int i, String s, String s1, Date date) {
