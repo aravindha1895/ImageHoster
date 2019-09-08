@@ -66,7 +66,18 @@ public class ImageRepository {
 			return null;
 		}
 	}
-
+	// Assignment bug fix while retrieving image by title when title is same. Retrieving by unique ID
+	// getImageByTitle() method shall be retired in future release.
+	public Image getImageByID(Integer id) {
+		EntityManager em = emf.createEntityManager();
+		try {
+			TypedQuery<Image> query = em.createQuery("SELECT i from Image i where i.id =:id", Image.class);
+			query.setParameter("id", id);
+			return query.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 	// The method creates an instance of EntityManager
 	// Executes JPQL query to fetch the image from the database with corresponding
 	// id
