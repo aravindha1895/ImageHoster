@@ -115,13 +115,21 @@ public class ImageController {
 	// This string is then displayed by 'edit.html' file as previous tags of an
 	// image
 	@RequestMapping(value = "/editImage")
-	public String editImage(@RequestParam("imageId") Integer imageId, Model model) {
+	public String editImage(@RequestParam("imageId") Integer imageId, Model model, HttpSession session) {
 		Image image = imageService.getImage(imageId);
+		if(isOperationAllowedOnImage(image,session)){
+			String tags = convertTagsToString(image.getTags());
+			model.addAttribute("image", image);
+			model.addAttribute("tags", tags);
+			return "images/edit";
+		} else {
+			String error = "Only the owner of the image can edit the image";
+			model.addAttribute("editError", error);
+			model.addAttribute("image", image);
+			model.addAttribute("tags", image.getTags());
+			return "images/image";
+		}
 
-		String tags = convertTagsToString(image.getTags());
-		model.addAttribute("image", image);
-		model.addAttribute("tags", tags);
-		return "images/edit";
 	}
 
 	// This controller method is called when the request pattern is of type
@@ -172,9 +180,18 @@ public class ImageController {
 	// id of the image to be deleted
 	// Looks for a controller method with request mapping of type '/images'
 	@RequestMapping(value = "/deleteImage", method = RequestMethod.DELETE)
-	public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId) {
-		imageService.deleteImage(imageId);
-		return "redirect:/images";
+	public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId, Model model, HttpSession session) {
+		Image image = imageService.getImage(imageId);
+		if(isOperationAllowedOnImage(image,session)){
+			imageService.deleteImage(imageId);
+			return "redirect:/images";
+		} else {
+			String error = "Only the owner of the image can delete the image";
+			model.addAttribute("deleteError", error);
+			model.addAttribute("image", image);
+			model.addAttribute("tags", image.getTags());
+			return "images/image";
+		}
 	}
 
 	// This method converts the image to Base64 format
@@ -221,5 +238,13 @@ public class ImageController {
 		}
 
 		return tagString.toString();
+	}
+	private boolean isOperationAllowedOnImage(Image image, HttpSession session){
+		User user = (User) session.getAttribute("loggeduser");
+		
+		if(image.getUser().getId()==user.getId())// Logged in user is the owner of the image
+			return true;
+		else // Logged in user is not the owner of the image
+			return false;
 	}
 }
