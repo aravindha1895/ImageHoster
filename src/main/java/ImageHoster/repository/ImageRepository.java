@@ -44,19 +44,6 @@ public class ImageRepository {
 
 	}
 
-	// Returns the image in case the image is found in the database
-	// Returns null if no image is found in the database
-	public Image getImageByTitle(String title) {
-		EntityManager em = emf.createEntityManager();
-		try {
-			TypedQuery<Image> query = em.createQuery("SELECT i from Image i where i.title =:title", Image.class);
-			query.setParameter("title", title);
-			return query.getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
-	}
-
 	// Bug fix while retrieving image by title when title is same. Retrieving by
 	// unique ID
 	// getImageByTitle() method shall be retired in future release.

@@ -31,14 +31,6 @@ public class ImageService {
 	}
 
 	// The method calls the getImageByTitle() method in the Repository and passes
-	// the title of the image to be fetched.
-	// Will be retired in future release or changed to getImageListByTitle()
-	@Deprecated
-	public Image getImageByTitle(String title) {
-		return imageRepository.getImageByTitle(title);
-	}
-
-	// The method calls the getImageByTitle() method in the Repository and passes
 	// the title of the image to be fetched
 	public Image getImageByID(Integer id) {
 		return imageRepository.getImageByID(id);
