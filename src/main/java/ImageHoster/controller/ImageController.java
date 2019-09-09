@@ -89,7 +89,7 @@ public class ImageController {
 	// updated details of the image
 	@RequestMapping(value = "/editImage")
 	public String editImage(@RequestParam("imageId") Integer imageId, Model model, HttpSession session) {
-		Image image = imageService.getImage(imageId);
+		Image image = imageService.getImageByID(imageId);
 		if (isOperationAllowedOnImage(image, session)) {
 			String tags = convertTagsToString(image.getTags());
 			model.addAttribute("image", image);
@@ -113,7 +113,7 @@ public class ImageController {
 	public String editImageSubmit(@RequestParam("file") MultipartFile file, @RequestParam("imageId") Integer imageId,
 			@RequestParam("tags") String tags, Image updatedImage, HttpSession session) throws IOException {
 
-		Image image = imageService.getImage(imageId);
+		Image image = imageService.getImageByID(imageId);
 		String updatedImageData = convertUploadedFileToBase64(file);
 		List<Tag> imageTags = findOrCreateTags(tags);
 
@@ -136,7 +136,7 @@ public class ImageController {
 	// This method deleted image by its ID.
 	@RequestMapping(value = "/deleteImage", method = RequestMethod.DELETE)
 	public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId, Model model, HttpSession session) {
-		Image image = imageService.getImage(imageId);
+		Image image = imageService.getImageByID(imageId);
 		if (isOperationAllowedOnImage(image, session)) {
 			imageService.deleteImage(imageId);
 			return "redirect:/images";

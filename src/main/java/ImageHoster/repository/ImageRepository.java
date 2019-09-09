@@ -71,14 +71,6 @@ public class ImageRepository {
 		}
 	}
 
-	// Returns the image fetched from the database
-	public Image getImage(Integer imageId) {
-		EntityManager em = emf.createEntityManager();
-		TypedQuery<Image> query = em.createQuery("SELECT i from Image i where i.id =:imageid", Image.class);
-		query.setParameter("imageid", imageId);
-		return query.getSingleResult();
-	}
-
 	// The method receives the Image object to be updated in the database
 	public void updateImage(Image updatedImage) {
 		EntityManager em = emf.createEntityManager();
