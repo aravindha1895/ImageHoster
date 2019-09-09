@@ -18,16 +18,10 @@ import ImageHoster.model.Image;
 @Repository
 public class ImageRepository {
 
-	// Get an instance of EntityManagerFactory from persistence unit with name as
-	// 'imageHoster'
 	@PersistenceUnit(unitName = "imageHoster")
 	private EntityManagerFactory emf;
 
 	// The method receives the Image object to be persisted in the database
-	// Creates an instance of EntityManager
-	// Starts a transaction
-	// The transaction is committed if it is successful
-	// The transaction is rolled back in case of unsuccessful transaction
 	public Image uploadImage(Image newImage) {
 		// Complete the method
 		EntityManager em = emf.createEntityManager();
@@ -42,9 +36,7 @@ public class ImageRepository {
 		}
 	}
 
-	// The method creates an instance of EntityManager
-	// Executes JPQL query to fetch all the images from the database
-	// Returns the list of all the images fetched from the database
+	// This method returns the list of all the images fetched from the database
 	public List<Image> getAllImages() {
 		EntityManager em = emf.createEntityManager();
 		TypedQuery<Image> query = em.createQuery("SELECT i from Image i", Image.class);
@@ -52,9 +44,6 @@ public class ImageRepository {
 
 	}
 
-	// The method creates an instance of EntityManager
-	// Executes JPQL query to fetch the image from the database with corresponding
-	// title
 	// Returns the image in case the image is found in the database
 	// Returns null if no image is found in the database
 	public Image getImageByTitle(String title) {
@@ -67,7 +56,9 @@ public class ImageRepository {
 			return null;
 		}
 	}
-	// Assignment bug fix while retrieving image by title when title is same. Retrieving by unique ID
+
+	// Bug fix while retrieving image by title when title is same. Retrieving by
+	// unique ID
 	// getImageByTitle() method shall be retired in future release.
 	public Image getImageByID(Integer id) {
 		EntityManager em = emf.createEntityManager();
@@ -79,9 +70,7 @@ public class ImageRepository {
 			return null;
 		}
 	}
-	// The method creates an instance of EntityManager
-	// Executes JPQL query to fetch the image from the database with corresponding
-	// id
+
 	// Returns the image fetched from the database
 	public Image getImage(Integer imageId) {
 		EntityManager em = emf.createEntityManager();
@@ -91,10 +80,6 @@ public class ImageRepository {
 	}
 
 	// The method receives the Image object to be updated in the database
-	// Creates an instance of EntityManager
-	// Starts a transaction
-	// The transaction is committed if it is successful
-	// The transaction is rolled back in case of unsuccessful transaction
 	public void updateImage(Image updatedImage) {
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction tran = em.getTransaction();
@@ -109,17 +94,7 @@ public class ImageRepository {
 	}
 
 	// The method receives the Image id of the image to be deleted in the database
-	// Creates an instance of EntityManager
-	// Starts a transaction
-	// Get the image with corresponding image id from the database
-	// This changes the state of the image model from detached state to persistent
-	// state, which is very essential to use the remove() method
-	// If you use remove() method on the object which is not in persistent state, an
-	// exception is thrown
-	// The transaction is committed if it is successful
-	// The transaction is rolled back in case of unsuccessful transaction
 	public void deleteImage(Integer imageId) {
-		// Complete the method
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction transaction = em.getTransaction();
 		try {
@@ -132,6 +107,5 @@ public class ImageRepository {
 			transaction.rollback();
 		}
 	}
-	
 
 }

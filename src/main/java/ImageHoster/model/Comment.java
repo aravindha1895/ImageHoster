@@ -17,15 +17,15 @@ public class Comment {
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	
+
 	@Column(columnDefinition = "TEXT")
 	private String text;
 	private LocalDate date;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "image_id")
 	private Image image;
@@ -69,7 +69,5 @@ public class Comment {
 	public void setImage(Image image) {
 		this.image = image;
 	}
-
-
 
 }

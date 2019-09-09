@@ -21,7 +21,8 @@ public class CommentRepository {
 
 	@Autowired
 	ImageRepository imageRepository;
-	
+
+	// Sumbits the comment posted for an image
 	public void submitComment(Comment comment) {
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction transaction = em.getTransaction();
@@ -34,6 +35,7 @@ public class CommentRepository {
 		}
 	}
 
+	// This method gets list of all comments for the given image.
 	public List<Comment> getCommentsList(Integer imageId) {
 		EntityManager em = emf.createEntityManager();
 		TypedQuery<Comment> query = em.createQuery("SELECT c from Comment c where c.image=:image", Comment.class);

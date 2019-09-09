@@ -10,24 +10,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ImageHoster.model.Image;
 import ImageHoster.service.ImageService;
 
-
 @Controller
 public class HomeController {
 
 	@Autowired
 	ImageService imageservice;
-	
-    public HomeController() {
-        System.out.println("*** HomeController ***");
-    }
 
-    @RequestMapping("/")
-    public String getAllImages(Model model) {
-        //Call getAllImages() method in ImageService class to get the list of all images
-        //Add the list of images in the model with the key as "images"
-    	List<Image> images =imageservice.getAllImages();
-    	model.addAttribute("images", images);
-        return "index";
-    }
+	public HomeController() {
+		System.out.println("*** HomeController ***");
+	}
+
+	@RequestMapping("/")
+	public String getAllImages(Model model) {
+		List<Image> images = imageservice.getAllImages();
+		model.addAttribute("images", images);
+		return "index";
+	}
 
 }
