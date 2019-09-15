@@ -1,23 +1,33 @@
 package ImageHoster.model;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 
 //@Entity annotation specifies that the corresponding class is a JPA entity
 @Entity
 //@Table annotation provides more options to customize the mapping.
-//Here the name of the table to be created in the database is explicitly mentioned as 'images'. Hence the table named 'images' will be created in the database with all the columns mapped to all the attributes in 'Image' class
 @Table(name = "images")
 public class Image {
 
     //@Id annotation specifies that the corresponding attribute is a primary key
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    //@Column annotation specifies that the attribute will be mapped to the column in the database.
-    //Here the column name is explicitly mentioned as 'id'
+    
     @Column(name = "id")
     private Integer id;
 
@@ -50,8 +60,19 @@ public class Image {
     //Since the mapping is Many to Many, a new table will be generated containing the two columns both referencing to the primary key of both the tables ('images', 'tags')
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Tag> tags = new ArrayList<>();
+    
+    @OneToMany(mappedBy="image", cascade= CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Comment> comment = new ArrayList<>();
 
-    public Image() {
+    public List<Comment> getComment() {
+		return comment;
+	}
+
+	public void setComment(List<Comment> comment) {
+		this.comment = comment;
+	}
+
+	public Image() {
     }
 
     public Image(int i, String s, String s1, Date date) {
